@@ -1,18 +1,26 @@
 import { EntityNames } from "src/common/enums/entity.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity(EntityNames.USER)
 export class UserEntity {
     @PrimaryGeneratedColumn("increment")
     id: number
-    @Column()
+    @Column({unique: true})
+    mobile: string
+    @Column({nullable: true})
     first_name: string
-    @Column()
+    @Column({nullable: true})
     last_name: string
-    @Column()
+    @Column({nullable: true, unique: true})
     email: string
-    @Column()
+    @Column({unique: true})
     invite_code: string
-    @Column()
-    agent_id: string
+    @Column({default: 0})
+    score: number
+    @Column({nullable: true, unique: true})
+    agent_id: number
+    @CreateDateColumn({type: "time with time zone"})
+    created_at: Date
+    @UpdateDateColumn({type: "time with time zone"})
+    updated_at: Date
 }
