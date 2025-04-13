@@ -1,3 +1,5 @@
 export enum EntityNames {
-    USER="user",
+    User="user",
+    UserAddress="user_address",
+    Category="category"
 }
