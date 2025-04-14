@@ -1,5 +1,5 @@
 // category.service.ts
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -9,14 +9,24 @@ import { CategoryEntity } from './entities/category.entity';
 export class CategoryService {
   constructor(
     @InjectRepository(CategoryEntity)
-    private readonly categoryRepo: Repository<CategoryEntity>,
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
 
   async create(dto: CreateCategoryDto, imageFilename: string) {
-    const category = this.categoryRepo.create({
-      ...dto,
-      image: imageFilename, // save image filename
+    const { show, slug, title, parentId } = dto
+    const existCategory = await this.findOneBySlug(slug)
+    if(existCategory) throw new ConflictException("Already exist category!")
+    const category = this.categoryRepository.create({
+      show,
+      title,
+      parentId,
+      image: imageFilename,
+      slug
     });
-    return await this.categoryRepo.save(category);
+    return await this.categoryRepository.save(category);
+  }
+
+  async findOneBySlug(slug: string) {
+    return await this.categoryRepository.findOneBy({slug})
   }
 }
