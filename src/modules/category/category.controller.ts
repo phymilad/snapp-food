@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Body,
+  Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -16,7 +17,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Post('create')
+  @Post()
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -34,5 +35,9 @@ export class CategoryController {
     @Body() body: CreateCategoryDto,
   ) {
     return this.categoryService.create(body, file?.filename); // pass filename to service
+  }
+  @Get()
+  findAll() {
+    return this.categoryService.findAll()
   }
 }
