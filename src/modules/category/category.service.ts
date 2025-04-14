@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryEntity } from './entities/category.entity';
 import { isBoolean, toBoolean } from 'src/common/utils/function.utils';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { paginationGenerator, paginationSolver } from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class CategoryService {
@@ -39,7 +41,8 @@ export class CategoryService {
     return await this.categoryRepository.save(category);
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
+    const { limit, skip, page } = paginationSolver(paginationDto.page, paginationDto.per_page)
     const [categories, count] = await this.categoryRepository.findAndCount({
       relations: {
         parent: true
@@ -49,9 +52,15 @@ export class CategoryService {
           title: true,
           slug: true
         }
-      }
+      },
+      take: limit,
+      skip,
+      order: {id: "DESC"}
     })
-    return categories
+    return {
+      pagination: paginationGenerator(count, page, limit),
+      data: categories
+    }
   }
 
   async findOneBySlug(slug: string) {

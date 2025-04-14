@@ -6,12 +6,14 @@ import {
   UseInterceptors,
   Body,
   Get,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('category')
 export class CategoryController {
@@ -37,7 +39,7 @@ export class CategoryController {
     return this.categoryService.create(body, file?.filename); // pass filename to service
   }
   @Get()
-  findAll() {
-    return this.categoryService.findAll()
+  findAll(@Query() pagination: PaginationDto) {
+    return this.categoryService.findAll(pagination)
   }
 }
