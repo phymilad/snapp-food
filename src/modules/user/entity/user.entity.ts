@@ -20,9 +20,9 @@ export class UserEntity {
     score: number
     @Column({nullable: true, unique: true})
     agent_id: number
-    @CreateDateColumn({type: "time with time zone"})
+    @CreateDateColumn()
     created_at: Date
-    @UpdateDateColumn({type: "time with time zone"})
+    @UpdateDateColumn()
     updated_at: Date
     @OneToMany(() => UserAddressEntity, address => address.user)
     addressList: UserAddressEntity[]
