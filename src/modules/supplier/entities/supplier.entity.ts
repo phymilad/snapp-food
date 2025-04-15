@@ -1,6 +1,7 @@
 import { EntityNames } from "src/common/enums/entity.enum";
 import { CategoryEntity } from "src/modules/category/entities/category.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { SupplierOtpEntity } from "./otp.entity";
 
 @Entity(EntityNames.Supplier)
 export class SupplierEntity {
@@ -37,4 +38,12 @@ export class SupplierEntity {
     agent: SupplierEntity
     @OneToMany(() => SupplierEntity, supplier => supplier.agent)
     subsets: SupplierEntity
+
+     // Relation with Otp
+    @Column({nullable: true})
+    otpId: number
+    @OneToOne(() => SupplierOtpEntity, otp => otp.supplier)
+    @JoinColumn()
+    otp: SupplierOtpEntity
+    
 }
