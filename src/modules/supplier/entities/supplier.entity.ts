@@ -14,7 +14,7 @@ export class SupplierEntity {
     manager_first_name: string
     
     @Column()
-    manager_lat_name: string
+    manager_last_name: string
     
     @Column()
     store_name: string
@@ -32,7 +32,7 @@ export class SupplierEntity {
     category: CategoryEntity
 
     @Column({nullable: true})
-    agentId: number
+    agentId: number | null
     @ManyToOne(() => SupplierEntity, supplier => supplier.subsets)
     agent: SupplierEntity
     @OneToMany(() => SupplierEntity, supplier => supplier.agent)
