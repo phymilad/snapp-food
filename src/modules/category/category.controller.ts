@@ -10,6 +10,7 @@ import {
   Patch,
   Param,
   ParseIntPipe,
+  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -40,7 +41,7 @@ export class CategoryController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateCategoryDto,
   ) {
-    return this.categoryService.create(body, file?.filename); // pass filename to service
+    return this.categoryService.create(body, file?.filename);
   }
   
   @Get()
@@ -52,7 +53,7 @@ export class CategoryController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './uploads/categories', // where to save the image
+        destination: './uploads/categories',
         filename: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
@@ -69,5 +70,14 @@ export class CategoryController {
     return this.categoryService.update(id, updateCategoryDto, file?.filename)
   }
 
+  @Delete("/:id")
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.categoryService.remove(id);
+  }
+
+  @Get("/by-slug/:slug")
+  findBySlug(@Param("slug") slug: string) {
+    return this.categoryService.findCategoriesBySlug(slug);
+  }
 
 }

@@ -90,4 +90,20 @@ export class CategoryService {
   async findOneById(id: number) {
     return await this.categoryRepository.findOneBy({id})
   }
+
+  async remove(id: number) {
+    const category = await this.findOneById(id);
+    if (!category) throw new NotFoundException("Not found category");
+    await this.categoryRepository.delete({id});
+    return {
+      message: "Deleted successfully"
+    };
+  }
+
+  async findCategoriesBySlug(slug: string) {
+    const category = await this.categoryRepository.findOne({where: {slug}, relations: {children: true}})
+    if(!category) throw new NotFoundException("Category not found");
+    return { category };
+  }
+
 }
