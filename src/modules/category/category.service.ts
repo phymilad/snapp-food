@@ -1,5 +1,5 @@
 // category.service.ts
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -7,6 +7,7 @@ import { CategoryEntity } from './entities/category.entity';
 import { isBoolean, toBoolean } from 'src/common/utils/function.utils';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { paginationGenerator, paginationSolver } from 'src/common/utils/pagination.util';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -26,11 +27,6 @@ export class CategoryService {
     if(parentId && !isNaN(parentId)) {
       parent = await this.findOneById(parentId)
     }
-    console.log({show,
-      title,
-      parentId: parent?.id,
-      image: imageFilename,
-      slug})
     const category = this.categoryRepository.create({
       show,
       title,
@@ -60,6 +56,31 @@ export class CategoryService {
     return {
       pagination: paginationGenerator(count, page, limit),
       data: categories
+    }
+  }
+
+  async update(id: number, updateCategoryDto: UpdateCategoryDto, imageFilename: string) {
+    console.log(id, updateCategoryDto)
+    const updateObject: Partial<CategoryEntity> = {}
+    const {parentId, show, slug, title} = updateCategoryDto
+    const category = await this.findOneById(id)
+    if(!category) throw new NotFoundException("Not found category")
+    if(imageFilename) updateObject.image = imageFilename
+    if(show && isBoolean(show)) updateObject.show = toBoolean(show)
+    if(title) updateObject.title = title
+    if(parentId && !isNaN(parseInt(parentId.toString()))) {
+      const category = await this.findOneById(+parentId)
+      if(!category) throw new NotFoundException("Not found parent category")
+      updateObject.parentId = category.id
+    }
+    if(slug) {
+      const category = await this.findOneBySlug(slug)
+      if(category && category.id !== id) throw new NotFoundException("Category slug already exist")
+      updateObject.slug = slug
+    }
+    await this.categoryRepository.update({id}, updateObject)
+    return {
+      message: "Updated successfully"
     }
   }
 
