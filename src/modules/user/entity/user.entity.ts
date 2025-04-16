@@ -1,7 +1,7 @@
 import { EntityNames } from "src/common/enums/entity.enum";
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UserAddressEntity } from "./address.entity";
-import { OtpEntity } from "./otp.entity";
+import { UserOtpEntity } from "./otp.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity {
@@ -45,7 +45,6 @@ export class UserEntity {
     // Relation with Otp
     @Column({nullable: true})
     otpId: number
-    @OneToOne(() => OtpEntity, otp => otp.user)
-    @JoinColumn()
-    otp: OtpEntity
+    @OneToOne(() => UserOtpEntity, otp => otp.user)
+    otp: UserOtpEntity
 }

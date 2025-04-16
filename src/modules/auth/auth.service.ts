@@ -11,14 +11,14 @@ import {randomInt} from "crypto";
 import {JwtService} from "@nestjs/jwt";
 import {TokensPayload} from "./types/payload";
 import { UserEntity } from "../user/entity/user.entity";
-import { OtpEntity } from "../user/entity/otp.entity";
+import { UserOtpEntity } from "../user/entity/otp.entity";
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
 
-    @InjectRepository(OtpEntity) private otpRepository: Repository<OtpEntity>,
+    @InjectRepository(UserOtpEntity) private otpRepository: Repository<UserOtpEntity>,
     private jwtService: JwtService
   ) {}
 

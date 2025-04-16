@@ -12,6 +12,6 @@ export class SupplierOtpEntity {
     expires_in: Date
     @Column()
     supplierId: number
-    @OneToOne(() => SupplierEntity, supplier => supplier.otp, {onDelete: "CASCADE"})
-    supplier: SupplierEntity
+    @OneToOne(() => SupplierEntity, supplier => supplier.otp, { onDelete: "SET NULL" })
+    supplier: SupplierEntity;
 }

@@ -1,4 +1,4 @@
-import { IsMobilePhone, Length } from "class-validator"
+import { IsEmail, IsIdentityCard, IsMobilePhone, Length } from "class-validator"
 
 export class SupplierSignUpDto {
     categoryId: number
@@ -12,4 +12,11 @@ export class SupplierSignUpDto {
     @IsMobilePhone("fa-IR", {}, {message: "Mobile number is invalid"})
     phone: string
     invite_code: string
+}
+
+export class SupplementaryInformationDto {
+    @IsEmail()
+    email: string
+    @IsIdentityCard("IR")
+    national_code: string
 }

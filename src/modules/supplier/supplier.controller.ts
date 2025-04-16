@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
-import { SupplierSignUpDto } from './dto/supplier.dto';
+import { SupplementaryInformationDto, SupplierSignUpDto } from './dto/supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { CheckOtpDto } from '../auth/dto/otp.dto';
+import { SupplierAuth } from 'src/common/decorators/auth.decorator';
 
 @Controller('supplier')
 export class SupplierController {
@@ -12,19 +14,15 @@ export class SupplierController {
     this.supplierService.signUp(SupplierSignUpDto)
   }
 
-  @Get()
-  findAll() {
+  @Post("check-otp")
+  checkOtp(@Body() otpDto: CheckOtpDto) {
+    this.supplierService.checkOtp(otpDto)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Post("supplementary-information")
+  @SupplierAuth()
+  supplementaryInformation(@Body() infoDto: SupplementaryInformationDto) {
+    this.supplierService.saveSupplimentaryInformation(infoDto)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-  }
 }
