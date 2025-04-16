@@ -163,15 +163,4 @@ export class SupplierService {
     }
   }
 
-  findAll() {
-  }
-
-  findOne(id: number) {
-  }
-
-  update(id: number, updateSupplierDto: UpdateSupplierDto) {
-  }
-
-  remove(id: number) {
-  }
 }
